@@ -207,8 +207,14 @@ namespace AssetRipper.Core.Parser.Asset
 					return new NewAnimationTrack(assetInfo);
 				case ClassIDType.Flare:
 					return new Flare(assetInfo);
+				case ClassIDType.Halo:
+					return new Halo(assetInfo);
+				case ClassIDType.LensFlare:
+					return new LensFlare(assetInfo);
 				case ClassIDType.FlareLayer:
 					return new FlareLayer(assetInfo);
+				case ClassIDType.HaloLayer:
+					return new HaloLayer(assetInfo);
 				case ClassIDType.NavMeshProjectSettings:
 					return new NavMeshProjectSettings(assetInfo);
 				case ClassIDType.Font:
