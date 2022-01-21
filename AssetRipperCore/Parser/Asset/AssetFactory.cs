@@ -28,6 +28,7 @@ using AssetRipper.Core.Classes.Light;
 using AssetRipper.Core.Classes.LightingDataAsset;
 using AssetRipper.Core.Classes.LightmapSettings;
 using AssetRipper.Core.Classes.LightProbes;
+using AssetRipper.Core.Classes.LineRenderer;
 using AssetRipper.Core.Classes.LODGroup;
 using AssetRipper.Core.Classes.Material;
 using AssetRipper.Core.Classes.Mesh;
@@ -206,6 +207,8 @@ namespace AssetRipper.Core.Parser.Asset
 					return new Texture3D(assetInfo);
 				case ClassIDType.NewAnimationTrack:
 					return new NewAnimationTrack(assetInfo);
+				case ClassIDType.LineRenderer:
+					return new LineRenderer(assetInfo);
 				case ClassIDType.Flare:
 					return new Flare(assetInfo);
 				case ClassIDType.Halo:
