@@ -220,6 +220,7 @@ namespace AssetRipper.Library
 
 			//Shader exporters
 			OverrideExporter<IShader>(new AssetShaderExporter());
+			GameStructure.Exporter.OverrideYamlExporter(ClassIDType.ComputeShader);
 			//OverrideExporter<IShader>(new SimpleShaderExporter());
 
 			//Audio exporters
