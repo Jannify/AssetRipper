@@ -50,7 +50,7 @@ namespace AssetRipper.Core.Project
 		public abstract AssetType ToExportType(ClassIDType classID);
 		protected abstract IExportCollection CreateCollection(VirtualSerializedFile virtualFile, IUnityObjectBase asset);
 
-		protected void OverrideYamlExporter(ClassIDType classType)
+		public void OverrideYamlExporter(ClassIDType classType)
 		{
 			OverrideExporter(classType, DefaultExporter);
 			OverrideExporter(classType, ScriptableExporter);
