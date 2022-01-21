@@ -1,8 +1,10 @@
 ﻿using AssetRipper.Core.IO.Asset;
+using AssetRipper.Core.Project;
+using AssetRipper.Core.YAML;
 
 namespace AssetRipper.Core.Classes.Shader.Parameters
 {
-	public struct UAVParameter : IAssetReadable
+	public struct UAVParameter : IAssetReadable, IYAMLExportable
 	{
 		public UAVParameter(string name, int index, int originalIndex)
 		{
@@ -17,6 +19,15 @@ namespace AssetRipper.Core.Classes.Shader.Parameters
 			NameIndex = reader.ReadInt32();
 			Index = reader.ReadInt32();
 			OriginalIndex = reader.ReadInt32();
+		}
+
+		public YAMLNode ExportYAML(IExportContainer container)
+		{
+			YAMLMappingNode node = new YAMLMappingNode();
+			node.Add("m_NameIndex", NameIndex);
+			node.Add("m_Index", Index);
+			node.Add("m_OriginalIndex", OriginalIndex);
+			return node;
 		}
 
 		public string Name { get; set; }

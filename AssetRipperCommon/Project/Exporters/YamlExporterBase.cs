@@ -18,7 +18,7 @@ namespace AssetRipper.Core.Project.Exporters
 			return true;
 		}
 
-		public bool Export(IExportContainer container, IUnityObjectBase asset, string path)
+		public virtual bool Export(IExportContainer container, IUnityObjectBase asset, string path)
 		{
 			using Stream fileStream = File.Create(path);
 			using InvariantStreamWriter streamWriter = new InvariantStreamWriter(fileStream, UTF8);

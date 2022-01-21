@@ -9,13 +9,15 @@ using AssetRipper.Core.Layout;
 using AssetRipper.Core.Parser.Asset;
 using AssetRipper.Core.Project;
 using AssetRipper.Core.YAML;
+using AssetRipper.Core.YAML.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityVersion = AssetRipper.Core.Parser.Files.UnityVersion;
 
 namespace AssetRipper.Core.Classes.Shader
 {
-	public sealed class Shader : TextAsset, IShader
+	public class Shader : NamedObject, IShader
 	{
 		public Shader(AssetInfo assetInfo) : base(assetInfo) { }
 
@@ -90,29 +92,29 @@ namespace AssetRipper.Core.Classes.Shader
 		{
 			if (IsSerialized(reader.Version))
 			{
-				ReadNamedObject(reader);
+				base.Read(reader);
 
 				m_ParsedForm.Read(reader);
 				Platforms = reader.ReadArray((t) => (GPUPlatform)t);
 				if (IsDoubleArray(reader.Version))
 				{
-					uint[][] offsets = reader.ReadUInt32ArrayArray();
-					uint[][] compressedLengths = reader.ReadUInt32ArrayArray();
-					uint[][] decompressedLengths = reader.ReadUInt32ArrayArray();
-					byte[] compressedBlob = reader.ReadByteArray();
+					Offsets2D = reader.ReadUInt32ArrayArray();
+					CompressedLengths2D = reader.ReadUInt32ArrayArray();
+					DecompressedLengths2D = reader.ReadUInt32ArrayArray();
+					CompressedBlob = reader.ReadByteArray();
 					reader.AlignStream();
 
-					UnpackSubProgramBlobs(reader.Info, offsets, compressedLengths, decompressedLengths, compressedBlob);
+					UnpackSubProgramBlobs(reader.Info, Offsets2D, CompressedLengths2D, DecompressedLengths2D, CompressedBlob);
 				}
 				else
 				{
-					uint[] offsets = reader.ReadUInt32Array();
-					uint[] compressedLengths = reader.ReadUInt32Array();
-					uint[] decompressedLengths = reader.ReadUInt32Array();
-					byte[] compressedBlob = reader.ReadByteArray();
+					Offsets1D = reader.ReadUInt32Array();
+					CompressedLengths1D = reader.ReadUInt32Array();
+					DecompressedLengths1D = reader.ReadUInt32Array();
+					CompressedBlob = reader.ReadByteArray();
 					reader.AlignStream();
 
-					UnpackSubProgramBlobs(reader.Info, offsets, compressedLengths, decompressedLengths, compressedBlob);
+					UnpackSubProgramBlobs(reader.Info, Offsets1D, CompressedLengths1D, DecompressedLengths1D, CompressedBlob);
 				}
 			}
 			else
@@ -121,11 +123,11 @@ namespace AssetRipper.Core.Classes.Shader
 
 				if (HasBlob(reader.Version))
 				{
-					uint decompressedSize = reader.ReadUInt32();
-					byte[] compressedBlob = reader.ReadByteArray();
+					DecompressedSize  = reader.ReadUInt32();
+					CompressedBlob  = reader.ReadByteArray();
 					reader.AlignStream();
 
-					UnpackSubProgramBlobs(reader.Info, 0, (uint)compressedBlob.Length, decompressedSize, compressedBlob);
+					UnpackSubProgramBlobs(reader.Info, 0, (uint)CompressedBlob.Length, DecompressedSize, CompressedBlob );
 				}
 
 				if (HasFallback(reader.Version))
@@ -176,7 +178,41 @@ namespace AssetRipper.Core.Classes.Shader
 
 		protected override YAMLMappingNode ExportYAMLRoot(IExportContainer container)
 		{
-			throw new NotSupportedException();
+			YAMLMappingNode node = base.ExportYAMLRoot(container);
+			node.InsertSerializedVersion(ToSerializedVersion(container.ExportVersion));
+			node.Add("m_ParsedForm", m_ParsedForm.ExportYAML(container));
+			node.Add("platforms", Platforms.Cast<int>().ExportYAML(false));
+			if (!IsSerialized(container.Version))
+			{
+				node.Add("decompressedSize", DecompressedSize);
+
+			}
+			else if (IsDoubleArray(container.Version))
+			{
+				node.Add("offsets", Offsets2D.ExportYAML(false));
+				node.Add("compressedLengths", CompressedLengths2D.ExportYAML(false));
+				node.Add("decompressedLengths", DecompressedLengths2D.ExportYAML(false));
+			}
+			else
+			{
+				node.Add("offsets", Offsets1D.ExportYAML(false));
+				node.Add("compressedLengths", CompressedLengths1D.ExportYAML(false));
+				node.Add("decompressedLengths", DecompressedLengths1D.ExportYAML(false));
+			}
+			node.Add("compressedBlob", CompressedBlob.ExportYAML());
+			if (HasDependencies(container.Version))
+			{
+				node.Add("m_Dependencies", Dependencies.ExportYAML(container));
+			}
+			if (HasNonModifiableTextures(container.Version))
+			{
+				node.Add("m_NonModifiableTextures", NonModifiableTextures.ExportYAML(container));
+			}
+			if (HasShaderIsBaked(container.Version))
+			{
+				node.Add("m_ShaderIsBaked", ShaderIsBaked);
+			}
+			return node;
 		}
 
 		private void UnpackSubProgramBlobs(LayoutInfo layout, uint offset, uint compressedLength, uint decompressedLength, byte[] compressedBlob)
@@ -220,11 +256,25 @@ namespace AssetRipper.Core.Classes.Shader
 		}
 
 		public override string ExportExtension => "shader";
+		public override string Name => this.GetValidShaderName();
 
 		public bool HasParsedForm => IsSerialized(SerializedFile.Version);
 
 		public GPUPlatform[] Platforms { get; set; }
 		public ShaderSubProgramBlob[] Blobs { get; set; }
+
+		//2D arrays starting from 2019.3
+		public uint[][] Offsets2D { get; set; }
+		public uint[][] CompressedLengths2D { get; set; }
+		public uint[][] DecompressedLengths2D { get; set; }
+		//1D arrays before 2019.3
+		public uint[] Offsets1D { get; set; }
+		public uint[] CompressedLengths1D { get; set; }
+		public uint[] DecompressedLengths1D { get; set; }
+		//Not serialized
+		public uint DecompressedSize { get; set; }
+		public byte[] CompressedBlob { get; set; }
+
 		public PPtr<Shader>[] Dependencies { get; set; }
 		public Dictionary<string, PPtr<Texture>> NonModifiableTextures { get; set; }
 		public bool ShaderIsBaked { get; set; }

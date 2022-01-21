@@ -2,12 +2,15 @@ using AssetRipper.Core.Classes.Misc;
 using AssetRipper.Core.Classes.Shader.SerializedShader.Enum;
 using AssetRipper.Core.IO.Asset;
 using AssetRipper.Core.IO.Extensions;
+using AssetRipper.Core.Project;
+using AssetRipper.Core.YAML;
+using AssetRipper.Core.YAML.Extensions;
 using System.Collections.Generic;
 using UnityVersion = AssetRipper.Core.Parser.Files.UnityVersion;
 
 namespace AssetRipper.Core.Classes.Shader.SerializedShader
 {
-	public struct SerializedPass : IAssetReadable
+	public struct SerializedPass : IAssetReadable, IYAMLExportable
 	{
 		/// <summary>
 		/// 2020.2 and greater
@@ -56,6 +59,7 @@ namespace AssetRipper.Core.Classes.Shader.SerializedShader
 				ProgRayTracing.Read(reader);
 			}
 			HasInstancingVariant = reader.ReadBoolean();
+			HasProceduralInstancingVariant = reader.ReadBoolean();
 			reader.AlignStream();
 
 			UseName = reader.ReadString();
@@ -69,6 +73,46 @@ namespace AssetRipper.Core.Classes.Shader.SerializedShader
 			}
 		}
 
+		public YAMLNode ExportYAML(IExportContainer container)
+		{
+			YAMLMappingNode node = new YAMLMappingNode();
+			if (HasHash(container.Version))
+			{
+				node.Add("m_EditorDataHash", EditorDataHash.ExportYAML(container));
+				node.Add("m_Platforms", Platforms.ExportYAML());
+				if (!HasKeywordStateMaskInsteadOfKeywordMasks(container.Version))
+				{
+					node.Add("m_LocalKeywordMask", LocalKeywordMask.ExportYAML(false));
+					node.Add("m_GlobalKeywordMask", GlobalKeywordMask.ExportYAML(false));
+				}
+			}
+			node.Add("m_NameIndices", NameIndices.ExportYAML());
+			node.Add("m_Type", (int)Type);
+			node.Add("m_State", State.ExportYAML(container));
+			node.Add("m_ProgramMask", ProgramMask);
+			node.Add("progVertex", ProgVertex.ExportYAML(container));
+			node.Add("progFragment", ProgFragment.ExportYAML(container));
+			node.Add("progGeometry", ProgGeometry.ExportYAML(container));
+			node.Add("progHull", ProgHull.ExportYAML(container));
+			node.Add("progDomain", ProgDomain.ExportYAML(container));
+			if (HasProgRayTracing(container.Version))
+			{
+				node.Add("progRayTracing", ProgRayTracing.ExportYAML(container));
+			}
+			node.Add("m_HasInstancingVariant", HasInstancingVariant);
+			node.Add("m_HasProceduralInstancingVariant", HasProceduralInstancingVariant);
+			node.Add("m_UseName", UseName);
+			node.Add("m_Name", Name);
+			node.Add("m_TextureName", TextureName);
+			node.Add("m_Tags", Tags.ExportYAML(container));
+			if (HasKeywordStateMaskInsteadOfKeywordMasks(container.Version))
+			{
+				//TODO: Implement SerializedKeywordStateMask
+				//node.Add("m_SerializedKeywordStateMask", SerializedKeywordStateMask.ExportYAML(container));
+			}
+			return node;
+		}
+
 		public Hash128[] EditorDataHash { get; set; }
 		public byte[] Platforms { get; set; }
 		public ushort[] LocalKeywordMask { get; set; }
@@ -77,6 +121,7 @@ namespace AssetRipper.Core.Classes.Shader.SerializedShader
 		public SerializedPassType Type { get; set; }
 		public uint ProgramMask { get; set; }
 		public bool HasInstancingVariant { get; set; }
+		public bool HasProceduralInstancingVariant { get; set; }
 		public string UseName { get; set; }
 		public string Name { get; set; }
 		public string TextureName { get; set; }

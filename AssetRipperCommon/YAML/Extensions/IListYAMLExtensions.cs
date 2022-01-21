@@ -103,6 +103,16 @@ namespace AssetRipper.Core.YAML.Extensions
 			}
 		}
 
+		public static YAMLNode ExportYAML(this IReadOnlyList<IReadOnlyList<uint>> _this, bool isRaw)
+		{
+			YAMLSequenceNode node = new YAMLSequenceNode(SequenceStyle.Block);
+			foreach (var value in _this)
+			{
+				node.Add(value.ExportYAML(isRaw));
+			}
+			return node;
+		}
+
 		public static YAMLNode ExportYAML(this IReadOnlyList<int> _this, bool isRaw)
 		{
 			if (isRaw)

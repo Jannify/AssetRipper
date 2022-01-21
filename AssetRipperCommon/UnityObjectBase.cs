@@ -32,7 +32,7 @@ namespace AssetRipper.Core
 		}
 
 		public const string AssetsKeyword = "Assets";
-		protected const string AssetExtension = "asset";
+		public const string AssetExtension = "asset";
 
 		public UnityObjectBase() { }
 		public UnityObjectBase(LayoutInfo layout) { }

@@ -1,5 +1,6 @@
 ﻿using AssetRipper.Core.Classes.Shader.SerializedShader.Enum;
 using AssetRipper.Core.Interfaces;
+using AssetRipper.Core.IO.Asset;
 
 namespace AssetRipper.Core.Classes.Shader.SerializedShader
 {

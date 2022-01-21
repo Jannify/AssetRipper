@@ -1,9 +1,12 @@
 using AssetRipper.Core.IO.Asset;
+using AssetRipper.Core.IO.Extensions;
 using AssetRipper.Core.Parser.Files;
+using AssetRipper.Core.Project;
+using AssetRipper.Core.YAML;
 
 namespace AssetRipper.Core.Classes.Shader.SerializedShader
 {
-	public struct SerializedProgram : IAssetReadable
+	public struct SerializedProgram : IAssetReadable, IYAMLExportable
 	{
 		/// <summary>
 		/// 2020.3.2 and greater
@@ -17,6 +20,17 @@ namespace AssetRipper.Core.Classes.Shader.SerializedShader
 			{
 				CommonParameters.Read(reader);
 			}
+		}
+
+		public YAMLNode ExportYAML(IExportContainer container)
+		{
+			YAMLMappingNode node = new YAMLMappingNode();
+			node.Add("m_SubPrograms", SubPrograms.ExportYAML(container));
+			if (HasCommonParameters(container.Version))
+			{
+				node.Add("m_CommonParameters", CommonParameters.ExportYAML(container));
+			}
+			return node;
 		}
 
 		public int GetTierCount()

@@ -1,9 +1,11 @@
 ﻿using AssetRipper.Core.Classes.Shader.Enums;
 using AssetRipper.Core.IO.Asset;
+using AssetRipper.Core.Project;
+using AssetRipper.Core.YAML;
 
 namespace AssetRipper.Core.Classes.Shader.Parameters
 {
-	public struct VectorParameter : IAssetReadable
+	public struct VectorParameter : IAssetReadable, IYAMLExportable
 	{
 		public VectorParameter(string name, ShaderParamType type, int index, int columns)
 		{
@@ -28,6 +30,17 @@ namespace AssetRipper.Core.Classes.Shader.Parameters
 			Type = (ShaderParamType)reader.ReadByte();
 			Dim = reader.ReadByte();
 			reader.AlignStream();
+		}
+
+		public YAMLNode ExportYAML(IExportContainer container)
+		{
+			YAMLMappingNode node = new YAMLMappingNode();
+			node.Add("m_NameIndex", NameIndex);
+			node.Add("m_Index", Index);
+			node.Add("m_ArraySize", ArraySize);
+			node.Add("m_Type", (byte)Type);
+			node.Add("m_Dim", Dim);
+			return node;
 		}
 
 		public string Name { get; set; }

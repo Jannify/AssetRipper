@@ -1,9 +1,11 @@
 ﻿using AssetRipper.Core.IO.Asset;
+using AssetRipper.Core.Project;
+using AssetRipper.Core.YAML;
 using System.IO;
 
 namespace AssetRipper.Core.Classes.Shader.Parameters
 {
-	public struct SamplerParameter : IAssetReadable
+	public struct SamplerParameter : IAssetReadable, IYAMLExportable
 	{
 		public SamplerParameter(uint sampler, int bindPoint)
 		{
@@ -17,10 +19,12 @@ namespace AssetRipper.Core.Classes.Shader.Parameters
 			BindPoint = reader.ReadInt32();
 		}
 
-		public SamplerParameter(BinaryReader reader)
+		public YAMLNode ExportYAML(IExportContainer container)
 		{
-			Sampler = reader.ReadUInt32();
-			BindPoint = reader.ReadInt32();
+			YAMLMappingNode node = new YAMLMappingNode();
+			node.Add("sampler", Sampler);
+			node.Add("bindPoint", BindPoint);
+			return node;
 		}
 
 		public uint Sampler { get; set; }

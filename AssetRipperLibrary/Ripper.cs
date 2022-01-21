@@ -219,8 +219,8 @@ namespace AssetRipper.Library
 			OverrideExporter<ISprite>(textureExporter);
 
 			//Shader exporters
-			OverrideExporter<IShader>(new DummyShaderTextExporter());
-			OverrideExporter<IShader>(new SimpleShaderExporter());
+			OverrideExporter<IShader>(new AssetShaderExporter());
+			//OverrideExporter<IShader>(new SimpleShaderExporter());
 
 			//Audio exporters
 			OverrideExporter<IAudioClip>(new NativeAudioExporter());

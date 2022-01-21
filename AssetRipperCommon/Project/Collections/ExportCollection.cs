@@ -94,15 +94,7 @@ namespace AssetRipper.Core.Project.Collections
 			return FileUtils.GetUniqueName(directoryPath, fileName, FileUtils.MaxFileNameLength - MetaExtension.Length);
 		}
 
-		protected virtual string GetExportExtension(IUnityObjectBase asset)
-		{
-			if (asset is IShader)
-				return "shader";
-			else if (asset is IMaterial)
-				return "mat";
-			else
-				return asset.ExportExtension;
-		}
+		protected virtual string GetExportExtension(IUnityObjectBase asset) => asset.ExportExtension;
 
 		public abstract IAssetExporter AssetExporter { get; }
 		public abstract ISerializedFile File { get; }
