@@ -71,9 +71,13 @@ namespace AssetRipper.Core.Classes.LightProbes
 		protected override YAMLMappingNode ExportYAMLRoot(IExportContainer container)
 		{
 			YAMLMappingNode node = base.ExportYAMLRoot(container);
-			node.Add(DataName, Data.ExportYAML(container));
-			node.Add(BakedCoefficientsName, BakedCoefficients.ExportYAML(container));
-			node.Add(BakedLightOcclusionName, BakedLightOcclusion.ExportYAML(container));
+			node.Add("m_Data", Data.ExportYAML(container));
+			node.Add("m_BakedCoefficients", BakedCoefficients.ExportYAML(container));
+			if (HasBakedLightOcclusion(container.Version))
+			{
+				node.Add("m_BakedLightOcclusion", BakedLightOcclusion.ExportYAML(container));
+			}
+
 			return node;
 		}
 
@@ -81,10 +85,6 @@ namespace AssetRipper.Core.Classes.LightProbes
 		public SphericalHarmonicsL2[] BakedCoefficients { get; set; }
 		public SHCoefficientsBaked[] BakedCoefficients11 { get; set; }
 		public LightProbeOcclusion[] BakedLightOcclusion { get; set; }
-
-		public const string DataName = "m_Data";
-		public const string BakedCoefficientsName = "m_BakedCoefficients";
-		public const string BakedLightOcclusionName = "m_BakedLightOcclusion";
 
 		public LightProbeData Data = new();
 	}

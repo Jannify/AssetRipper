@@ -287,6 +287,7 @@ namespace AssetRipper.Core.Project
 			OverrideYamlExporter(ClassIDType.CanvasGroup);
 			OverrideYamlExporter(ClassIDType.ClusterInputManager);
 			OverrideYamlExporter(ClassIDType.NavMeshData);
+			OverrideYamlExporter(ClassIDType.LightProbes);
 			OverrideYamlExporter(ClassIDType.UnityConnectSettings);
 			OverrideYamlExporter(ClassIDType.AvatarMask);
 			OverrideYamlExporter(ClassIDType.ParticleSystemForceField);

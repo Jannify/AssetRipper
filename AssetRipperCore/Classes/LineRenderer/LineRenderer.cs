@@ -16,7 +16,8 @@ namespace AssetRipper.Core.Classes.LineRenderer
 		{
 			base.Read(reader);
 
-			Parameters = reader.ReadAsset<LineParameters>();
+			Positions = reader.ReadAssetArray<Vector3f>();
+			Parameters.Read(reader);
 			UseWorldSpace = reader.ReadBoolean();
 			Loop = reader.ReadBoolean();
 		}
@@ -25,6 +26,7 @@ namespace AssetRipper.Core.Classes.LineRenderer
 		{
 			base.Write(writer);
 
+			Positions.Write(writer);
 			Parameters.Write(writer);
 			writer.Write(UseWorldSpace);
 			writer.Write(Loop);
