@@ -104,7 +104,7 @@ namespace AssetRipper.Core.Classes.Shader
 					CompressedBlob = reader.ReadByteArray();
 					reader.AlignStream();
 
-					UnpackSubProgramBlobs(reader.Info, Offsets2D, CompressedLengths2D, DecompressedLengths2D, CompressedBlob);
+					//UnpackSubProgramBlobs(reader.Info, Offsets2D, CompressedLengths2D, DecompressedLengths2D, CompressedBlob);
 				}
 				else
 				{
@@ -114,7 +114,7 @@ namespace AssetRipper.Core.Classes.Shader
 					CompressedBlob = reader.ReadByteArray();
 					reader.AlignStream();
 
-					UnpackSubProgramBlobs(reader.Info, Offsets1D, CompressedLengths1D, DecompressedLengths1D, CompressedBlob);
+					//UnpackSubProgramBlobs(reader.Info, Offsets1D, CompressedLengths1D, DecompressedLengths1D, CompressedBlob);
 				}
 			}
 			else
@@ -127,7 +127,7 @@ namespace AssetRipper.Core.Classes.Shader
 					CompressedBlob  = reader.ReadByteArray();
 					reader.AlignStream();
 
-					UnpackSubProgramBlobs(reader.Info, 0, (uint)CompressedBlob.Length, DecompressedSize, CompressedBlob );
+					//UnpackSubProgramBlobs(reader.Info, 0, (uint)CompressedBlob.Length, DecompressedSize, CompressedBlob );
 				}
 
 				if (HasFallback(reader.Version))
@@ -181,7 +181,7 @@ namespace AssetRipper.Core.Classes.Shader
 			YAMLMappingNode node = base.ExportYAMLRoot(container);
 			node.InsertSerializedVersion(ToSerializedVersion(container.ExportVersion));
 			node.Add("m_ParsedForm", m_ParsedForm.ExportYAML(container));
-			node.Add("platforms", Platforms.Cast<int>().ExportYAML(false));
+			node.Add("platforms", Array.ConvertAll(Platforms, value => (int) value).ExportYAML(false));
 			if (!IsSerialized(container.Version))
 			{
 				node.Add("decompressedSize", DecompressedSize);
