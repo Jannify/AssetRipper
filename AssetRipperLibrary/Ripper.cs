@@ -160,6 +160,9 @@ namespace AssetRipper.Library
 			}
 			TaskManager.WaitUntilAllCompleted();
 			Logger.Info(LogCategory.Export, "Finished post-export");
+
+			DeterministicGUID.Reset(out bool wasDeterministic);
+			Logger.Info(LogCategory.Export, $"Export was deterministic: {wasDeterministic}");
 		}
 
 		public void ResetData()

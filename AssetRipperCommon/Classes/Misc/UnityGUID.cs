@@ -1,8 +1,10 @@
 ﻿using AssetRipper.Core.Extensions;
 using AssetRipper.Core.IO.Asset;
 using AssetRipper.Core.IO.Endian;
+using AssetRipper.Core.Logging;
 using AssetRipper.Core.Parser.Files.SerializedFiles.IO;
 using AssetRipper.Core.Project;
+using AssetRipper.Core.Utils;
 using AssetRipper.Core.YAML;
 using System;
 using System.Text;
@@ -11,7 +13,7 @@ namespace AssetRipper.Core.Classes.Misc
 {
 	public struct UnityGUID : IAsset, ISerializedReadable, ISerializedWritable, IEquatable<UnityGUID>
 	{
-		public UnityGUID(Guid guid) : this(guid.ToByteArray()) { }
+		private UnityGUID(Guid guid) : this(ConvertSystemBytesToUnityBytes(guid.ToByteArray())) { }
 
 		public UnityGUID(byte[] guidData)
 		{
@@ -29,7 +31,45 @@ namespace AssetRipper.Core.Classes.Misc
 			Data3 = dword3;
 		}
 
-		public static UnityGUID NewGuid() => new UnityGUID(Guid.NewGuid());
+		public static UnityGUID NewGuid(ClassIDType classID, string name, long pathID)
+		{
+			UnityGUID unityGuid = new(DeterministicGUID.NewGuid(classID, name, pathID));
+			if (unityGuid == MissingReference)
+			{
+				Logger.Warning($"Generated missing-reference GUID with ClassID: {classID} Name: {name} PathID: {pathID}. Using random one.");
+				return new UnityGUID(Guid.NewGuid());
+			}
+
+			return unityGuid;
+		}
+
+		public static UnityGUID NewGuid(ClassIDType classID, string seed)
+		{
+			UnityGUID unityGuid = new(DeterministicGUID.NewGuid(classID, seed));
+			if (unityGuid == MissingReference)
+			{
+				Logger.Warning($"Generated missing-reference GUID with ClassID: {classID} Seed: {seed}. Using random one.");
+				return new UnityGUID(Guid.NewGuid());
+			}
+
+			return unityGuid;
+		}
+
+		public static UnityGUID NewGuid(string seed)
+		{
+			UnityGUID unityGuid = new(DeterministicGUID.NewGuid(seed));
+			if (unityGuid == MissingReference)
+			{
+				Logger.Warning($"Generated missing-reference GUID with Seed: {seed}. Using random one.");
+				return new UnityGUID(Guid.NewGuid());
+			}
+
+			return unityGuid;
+		}
+
+		public static explicit operator UnityGUID(Guid systemGuid) => new UnityGUID(systemGuid);
+
+		public static explicit operator Guid(UnityGUID unityGuid) => Guid.Parse(unityGuid.ToString());
 
 		public static bool operator ==(UnityGUID left, UnityGUID right)
 		{
@@ -132,6 +172,41 @@ namespace AssetRipper.Core.Classes.Misc
 			sb.Append(StringBuilderExtensions.ByteHexRepresentations[unchecked((int)(value >> 4) & 0xF0) | unchecked((int)(value >> 12) & 0xF)]);
 			sb.Append(StringBuilderExtensions.ByteHexRepresentations[unchecked((int)(value >> 12) & 0xF0) | unchecked((int)(value >> 20) & 0xF)]);
 			sb.Append(StringBuilderExtensions.ByteHexRepresentations[unchecked((int)(value >> 20) & 0xF0) | unchecked((int)(value >> 28) & 0xF)]);
+		}
+
+		private static byte[] ConvertSystemBytesToUnityBytes(byte[] systemBytes)
+		{
+			if (systemBytes is null)
+				throw new ArgumentNullException(nameof(systemBytes));
+			if (systemBytes.Length != 16)
+				throw new ArgumentException($"Invalid length: {systemBytes.Length}", nameof(systemBytes));
+
+			byte[] unityBytes = new byte[16];
+			for (int i = 0; i < 4; i++)
+			{
+				unityBytes[i] = systemBytes[3 - i];
+			}
+			unityBytes[4] = systemBytes[5];
+			unityBytes[5] = systemBytes[4];
+			unityBytes[6] = systemBytes[7];
+			unityBytes[7] = systemBytes[6];
+			for (int i = 8; i < 16; i++)
+			{
+				unityBytes[i] = systemBytes[i];
+			}
+			for (int i = 0; i < 16; i++)
+			{
+				//AB becomes BA
+				byte value = unityBytes[i];
+				unityBytes[i] = (byte)(unchecked((int)(value << 4) & 0xF0) | unchecked((int)(value >> 4) & 0xF));
+			}
+
+			return unityBytes;
+		}
+
+		public static UnityGUID Parse(string guidString)
+		{
+			return new UnityGUID(Guid.Parse(guidString));
 		}
 
 		public bool IsZero => Data0 == 0 && Data1 == 0 && Data2 == 0 && Data3 == 0;

@@ -57,7 +57,7 @@ namespace AssetRipper.Core.Project.Collections
 			}
 			if (GUID.IsZero)
 			{
-				GUID = UnityGUID.NewGuid();
+				GUID = UnityGUID.NewGuid(ClassIDType.Scene, file.Name);
 			}
 
 			if (OcclusionCullingSettingsExtensions.HasReadPVSData(File.Version))

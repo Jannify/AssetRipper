@@ -245,13 +245,6 @@ namespace AssetRipper.Library.Utils
 			}
 			return "Unnamed";
 		}
-		public static void RandomizeAssetGuid(IEnumerable<AssetRipper.Core.Classes.Object.Object> assets)
-		{
-			foreach (var asset in assets)
-			{
-				asset.AssetInfo.GUID = new UnityGUID(Guid.NewGuid());
-			}
-		}
 		public static void FixScript(IMonoScript script)
 		{
 			using (MD5 md5 = MD5.Create())

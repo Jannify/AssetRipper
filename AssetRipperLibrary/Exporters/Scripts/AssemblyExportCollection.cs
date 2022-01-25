@@ -1,4 +1,5 @@
-﻿using AssetRipper.Core.Classes;
+﻿using AssetRipper.Core;
+using AssetRipper.Core.Classes;
 using AssetRipper.Core.Classes.Meta;
 using AssetRipper.Core.Classes.Meta.Importers;
 using AssetRipper.Core.Classes.Misc;
@@ -211,13 +212,8 @@ namespace AssetRipper.Library.Exporters.Scripts
 
 		private static UnityGUID CalculateAssemblyHashGuid(string assemblyPath)
 		{
-			using (var md5 = MD5.Create())
-			{
-				string shortName = Path.GetFileNameWithoutExtension(assemblyPath);
-				byte[] shortNameBytes = Encoding.Default.GetBytes(shortName);
-				var shortNameHash = md5.ComputeHash(shortNameBytes);
-				return new UnityGUID(shortNameHash);
-			}
+			string shortName = Path.GetFileNameWithoutExtension(assemblyPath);
+			return UnityGUID.NewGuid(shortName);
 		}
 
 		private void OnAssemblyExported(IExportContainer container, string path)
