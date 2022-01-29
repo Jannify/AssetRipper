@@ -9,14 +9,14 @@
 		public const string GUIName = Name + "GUI";
 		public const string LibraryName = Name + "Library";
 
-		public const string Author = "ds5678";
+		public const string Author = "ds5678 edited by Jannify";
 		public const string CopyRight = "Copyright ©  2021";
 
-		public const string Version = "0.1.8.1";
+		public const string Version = "0.1.9.0";
 
 		public const string TranslationURL = "https://weblate.samboy.dev/engage/assetripper/";
 		public const string WebsiteURL = "https://assetripper.github.io/AssetRipper";
-		public const string RepositoryURL = "https://www.github.com/AssetRipper/AssetRipper";
+		public const string RepositoryURL = "https://github.com/Jannify/AssetRipper";
 		public const string IssuesURL = RepositoryURL + "/issues";
 		public const string PullRequestsURL = RepositoryURL + "/pulls";
 		public const string ReleasesURL = RepositoryURL + "/releases";
