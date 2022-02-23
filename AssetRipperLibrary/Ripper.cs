@@ -224,9 +224,9 @@ namespace AssetRipper.Library
 			OverrideExporter<ISprite>(textureExporter);
 
 			//Shader exporters
+			OverrideExporter<IShader>(new SimpleShaderExporter());
 			OverrideExporter<IShader>(new AssetShaderExporter());
 			GameStructure.Exporter.OverrideYamlExporter(ClassIDType.ComputeShader);
-			//OverrideExporter<IShader>(new SimpleShaderExporter());
 
 			//Audio exporters
 			OverrideExporter<IAudioClip>(new YamlAudioExporter());

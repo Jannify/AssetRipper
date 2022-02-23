@@ -1,6 +1,6 @@
 using AssetRipper.Core.IO.Asset;
 using AssetRipper.Core.IO.Extensions;
-using AssetRipper.Core.Math;
+using AssetRipper.Core.Math.Colors;
 using AssetRipper.Core.Parser.Asset;
 using AssetRipper.Core.Project;
 using AssetRipper.Core.YAML;
@@ -28,7 +28,7 @@ namespace AssetRipper.Core.Classes.Flare
 			return node;
 		}
 
-		public ColorRGBA32 Color;
+		public ColorRGBA32 Color = new();
 		public float Size { get; set; }
 	}
 }

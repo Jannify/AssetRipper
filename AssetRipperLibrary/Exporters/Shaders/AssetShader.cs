@@ -15,84 +15,90 @@ using AssetRipper.Core.Project;
 using AssetRipper.Core.YAML;
 using System.Collections.Generic;
 
-namespace AssetRipper.Library.Exporters.Shaders;
-
-public sealed class AssetShader : INamedObject
+namespace AssetRipper.Library.Exporters.Shaders
 {
-	private readonly IShader shader;
-
-	public AssetShader(IShader shader)
+	public sealed class AssetShader : INamedObject
 	{
-		this.shader = shader;
-	}
+		private readonly IShader shader;
 
-	public string ExportExtension => UnityObjectBase.AssetExtension;
+		public AssetShader(IShader shader)
+		{
+			this.shader = shader;
+		}
 
-	// Pointers to base shader
-	public AssetInfo AssetInfo
-	{
-		get => shader.AssetInfo;
-		set => shader.AssetInfo = value;
-	}
+		public string ExportExtension => UnityObjectBase.AssetExtension;
 
-	public ClassIDType ClassID => shader.ClassID;
+		// Pointers to base shader
+		public AssetInfo AssetInfo
+		{
+			get => shader.AssetInfo;
+			set => shader.AssetInfo = value;
+		}
 
-	public string ExportPath => shader.ExportPath;
-	public ISerializedFile SerializedFile => shader.SerializedFile;
-	public UnityGUID GUID => shader.GUID;
-	public long PathID => shader.PathID;
+		public ClassIDType ClassID => shader.ClassID;
 
-	public HideFlags ObjectHideFlags
-	{
-		get => shader.ObjectHideFlags;
-		set => shader.ObjectHideFlags = value;
-	}
+		public string ExportPath => shader.ExportPath;
+		public ISerializedFile SerializedFile => shader.SerializedFile;
+		public UnityGUID GUID
+		{
+			get => shader.GUID;
+			set => shader.GUID = value;
+		}
 
-	public IUnityObjectBase ConvertLegacy(IExportContainer container) => shader.ConvertLegacy(container);
+		public long PathID => shader.PathID;
 
-	public YAMLDocument ExportYAMLDocument(IExportContainer container) => shader.ExportYAMLDocument(container);
+		public HideFlags ObjectHideFlags
+		{
+			get => shader.ObjectHideFlags;
+			set => shader.ObjectHideFlags = value;
+		}
 
-	public void Read(AssetReader reader) => shader.Read(reader);
+		public IUnityObjectBase ConvertLegacy(IExportContainer container) => shader.ConvertLegacy(container);
 
-	public void Write(AssetWriter writer) => shader.Write(writer);
+		public YAMLDocument ExportYAMLDocument(IExportContainer container) => shader.ExportYAMLDocument(container);
 
-	public YAMLNode ExportYAML(IExportContainer container) => shader.ExportYAML(container);
+		public void Read(AssetReader reader) => shader.Read(reader);
 
-	public IEnumerable<PPtr<IUnityObjectBase>> FetchDependencies(DependencyContext context) => shader.FetchDependencies(context);
+		public void Write(AssetWriter writer) => shader.Write(writer);
 
-	public List<TypeTreeNode> MakeReleaseTypeTreeNodes(int depth, int startingIndex) => shader.MakeReleaseTypeTreeNodes(depth, startingIndex);
+		public YAMLNode ExportYAML(IExportContainer container) => shader.ExportYAML(container);
 
-	public List<TypeTreeNode> MakeEditorTypeTreeNodes(int depth, int startingIndex) => shader.MakeReleaseTypeTreeNodes(depth, startingIndex);
+		public IEnumerable<PPtr<IUnityObjectBase>> FetchDependencies(DependencyContext context) => shader.FetchDependencies(context);
 
-	public UnityVersion AssetUnityVersion
-	{
-		get => shader.AssetUnityVersion;
-		set => shader.AssetUnityVersion = value;
-	}
+		public List<TypeTreeNode> MakeReleaseTypeTreeNodes(int depth, int startingIndex) => shader.MakeReleaseTypeTreeNodes(depth, startingIndex);
 
-	public EndianType EndianType
-	{
-		get => shader.EndianType;
-		set => shader.EndianType = value;
-	}
+		public List<TypeTreeNode> MakeEditorTypeTreeNodes(int depth, int startingIndex) => shader.MakeReleaseTypeTreeNodes(depth, startingIndex);
 
-	public TransferInstructionFlags TransferInstructionFlags
-	{
-		get => shader.TransferInstructionFlags;
-		set => shader.TransferInstructionFlags = value;
-	}
+		public UnityVersion AssetUnityVersion
+		{
+			get => shader.AssetUnityVersion;
+			set => shader.AssetUnityVersion = value;
+		}
 
-	public void ConvertToEditor() => shader.ConvertToEditor();
+		public EndianType EndianType
+		{
+			get => shader.EndianType;
+			set => shader.EndianType = value;
+		}
 
-	public string Name
-	{
-		get => shader.Name;
-		set => shader.Name = value;
-	}
+		public TransferInstructionFlags TransferInstructionFlags
+		{
+			get => shader.TransferInstructionFlags;
+			set => shader.TransferInstructionFlags = value;
+		}
 
-	public PPtr<IPrefabInstance> PrefabInstance
-	{
-		get => shader.PrefabInstance;
-		set => shader.PrefabInstance = value;
+		public void ConvertToEditor() => shader.ConvertToEditor();
+
+		public string Name
+		{
+			get => shader.Name;
+			set => shader.Name = value;
+		}
+
+		public PPtr<IPrefabInstance> PrefabInstance
+		{
+			get => shader.PrefabInstance;
+			set => shader.PrefabInstance = value;
+		}
 	}
 }

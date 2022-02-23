@@ -1,5 +1,6 @@
 using AssetRipper.Core.Classes.Shader.SerializedShader.Enum;
 using AssetRipper.Core.IO.Asset;
+using AssetRipper.Core.IO.Extensions;
 using AssetRipper.Core.Project;
 using AssetRipper.Core.YAML;
 using AssetRipper.Core.YAML.Extensions;
@@ -27,7 +28,7 @@ namespace AssetRipper.Core.Classes.Shader.SerializedShader
 			YAMLMappingNode node = new YAMLMappingNode();
 			node.Add("m_Name", Name);
 			node.Add("m_Description", Description);
-			node.Add("m_Attributes", Attributes.ExportYAML());
+			node.Add("m_Attributes", Attributes.ExportYAML(container));
 			node.Add("m_Type", (int)Type);
 			node.Add("m_Flags", (uint)Flags);
 			node.Add("m_DefValue[0]", DefValue0);

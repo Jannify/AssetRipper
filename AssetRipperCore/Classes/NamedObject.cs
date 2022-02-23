@@ -41,7 +41,7 @@ namespace AssetRipper.Core.Classes
 			return root;
 		}
 
-		public string Name { get; set; }
+		public virtual string Name { get; set; }
 
 		public const string NameName = "m_Name";
 	}

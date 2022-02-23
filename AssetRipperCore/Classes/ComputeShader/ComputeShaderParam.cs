@@ -4,7 +4,7 @@ using AssetRipper.Core.YAML;
 
 namespace AssetRipper.Core.Classes.ComputeShader
 {
-	public struct ComputeShaderParam : IAssetReadable, IYAMLExportable
+	public sealed class ComputeShaderParam : IAssetReadable, IYAMLExportable
 	{
 		public void Read(AssetReader reader)
 		{

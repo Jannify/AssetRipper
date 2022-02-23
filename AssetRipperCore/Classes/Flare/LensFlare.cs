@@ -2,7 +2,7 @@ using AssetRipper.Core.Classes.Misc;
 using AssetRipper.Core.Interfaces;
 using AssetRipper.Core.IO.Asset;
 using AssetRipper.Core.IO.Extensions;
-using AssetRipper.Core.Math;
+using AssetRipper.Core.Math.Colors;
 using AssetRipper.Core.Parser.Asset;
 using AssetRipper.Core.Project;
 using AssetRipper.Core.YAML;
@@ -49,9 +49,9 @@ namespace AssetRipper.Core.Classes.Flare
 			return node;
 		}
 
-		public PPtr<Flare> Flare;
-		public ColorRGBAf Color;
-		public BitField IgnoreLayers;
+		public PPtr<Flare> Flare = new();
+		public ColorRGBAf Color = new ();
+		public BitField IgnoreLayers = new();
 
 		public float Brightness { get; set; }
 		public float FadeSpeed { get; set; }

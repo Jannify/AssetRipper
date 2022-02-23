@@ -7,7 +7,7 @@ using AssetRipper.Core.YAML;
 
 namespace AssetRipper.Core.Classes.ComputeShader
 {
-	public class ComputeShader : NamedObject
+	public sealed class ComputeShader : NamedObject
 	{
 		public ComputeShader(AssetInfo assetInfo) : base(assetInfo) { }
 

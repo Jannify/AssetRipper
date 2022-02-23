@@ -29,29 +29,23 @@ namespace AssetRipper.Core.Classes.Flare
 				yield return asset;
 			}
 
-			yield return context.FetchDependency(FlareTexture, FlareTextureName);
+			yield return context.FetchDependency(FlareTexture, "m_FlareTexture");
 		}
 
 		protected override YAMLMappingNode ExportYAMLRoot(IExportContainer container)
 		{
 			YAMLMappingNode node = base.ExportYAMLRoot(container);
 			node.AddSerializedVersion(1);
-			node.Add(FlareTextureName, FlareTexture.ExportYAML(container));
-			node.Add(TextureLayoutName, (int)TextureLayout);
-			node.Add(ElementseName, Elements.ExportYAML(container));
-			node.Add(UseFogName, UseFog);
+			node.Add("m_FlareTexture", FlareTexture.ExportYAML(container));
+			node.Add("m_TextureLayout", (int)TextureLayout);
+			node.Add("m_Elements", Elements.ExportYAML(container));
+			node.Add("m_UseFog", UseFog);
 			return node;
 		}
 
 		public TextureLayout TextureLayout { get; set; }
 		public FlareElement[] Elements { get; set; }
 		public bool UseFog { get; set; }
-
-		public const string FlareTextureName = "m_FlareTexture";
-		public const string TextureLayoutName = "m_TextureLayout";
-		public const string ElementseName = "m_Elements";
-		public const string UseFogName = "m_UseFog";
-
 		public PPtr<Texture> FlareTexture = new();
 	}
 }

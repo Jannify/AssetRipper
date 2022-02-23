@@ -1,6 +1,6 @@
 ﻿using AssetRipper.Core.IO.Asset;
 using AssetRipper.Core.IO.Extensions;
-using AssetRipper.Core.Math;
+using AssetRipper.Core.Math.Vectors;
 using AssetRipper.Core.Parser.Asset;
 using AssetRipper.Core.Project;
 using AssetRipper.Core.YAML;
@@ -32,9 +32,9 @@ namespace AssetRipper.Core.Classes.ConstantForce
 			return node;
 		}
 
-		public Vector3f Force;
-		public Vector3f RelativeForce;
-		public Vector3f Torque;
-		public Vector3f RelativeTorque;
+		public Vector3f Force = new();
+		public Vector3f RelativeForce = new();
+		public Vector3f Torque = new();
+		public Vector3f RelativeTorque = new();
 	}
 }
